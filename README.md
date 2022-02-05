@@ -1,6 +1,16 @@
 # Build & Deploy react application image to AWS ECR
 
-## Package manager
+## Context
+
+This repository includes a `docker images` for `starting application`.
+
+### Note
+
+> The way we package the front-end application in to a docker image is not normal
+> Usual practice is to store the `static files` into a `blob storage` and use `cdn` to `cache the static content`
+> for fast read time.
+
+### Package manager
 
 `yarn`
 
