@@ -1,0 +1,42 @@
+name: CDK - Deploy application image
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    env:
+      AWS_REGION: ap-southeast-2
+      ECR_REPOSITORY: simple-react
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.CDK_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.CDK_AWS_ACCESS_KEY_SECRET }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and Tag Docker Image
+        env:
+          ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build . -t $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA
+
+      - name: Push Docker Image to ECR
+        env:
+          ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY
+
+      - name: Logout of Amazon ECR
+        if: always()
+        run: docker logout ${{ steps.login-ecr.outputs.registry }}

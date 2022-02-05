@@ -1,5 +1,11 @@
 ## [v0.1.0] - 2022-02-05
 
+### Build
+
+- Add `manual_deployment yaml` github action config file
+
+### Add
+
 - Create `Dockerfile` to package application and for starting application in server
 - Add `Husky` to run test on git hooks event `pre-commit`
 - Add `CHANGELOG.md`
