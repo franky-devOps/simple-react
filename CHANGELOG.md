@@ -2,6 +2,7 @@
 
 ### Build
 
+- Add `pr yaml` to build and run test on code push to origin branch
 - Add `manual_deployment yaml` github action config file
 
 ### Add
